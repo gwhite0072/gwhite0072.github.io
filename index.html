@@ -16,47 +16,43 @@
 	 <h3>We filter our dataset by major</h3>
   	<div id="majorTable"></div>
   	</div>
-  </body>
+</body>
+<script type="text/x-handlebars-template" id="tableTemplate">
+	<table class="table table-striped">
+        	<tr><th>Name</th><th>Major</th><th>MIdterm</th><th>Final</th></tr>
+             	{{#each rows}}
+                	<tr>
+                		<td>{{name}}</td><td>{{major}}</td><td>{{midterm}}</td><td>{{final}}</td>
+               		</tr>
+             	{{/each}}
+      	</table>
+</script>
 
- <!-- Handlebars template -->
-  <script type="text/x-handlebars-template" id="tableTemplate">
-      <table class="table table-striped">
-          <tr><th>Name</th><th>Major</th><th>MIdterm</th><th>Final</th></tr>
-             {{#each rows}}
-                <tr>
-                     <td>{{name}}</td><td>{{major}}</td><td>{{midterm}}</td><td>{{final}}</td>
-                </tr>
-             {{/each}}
-      </table>
-  </script>
-
-  <!-- application ajax code -->
-  <script>
-
-  function getData(selected_Major) {      // called when a button is clicked. paramter selected_meal = breakfast, lunch, or dinner
-      var request = new XMLHttpRequest();
-      request.open('GET', 'cit5students.json');      // open Ajax request for data file menu_items.json
+<script>
+function getData(selected_Major) {     
+	var request = new XMLHttpRequest();
+	request.open('GET', 'cit5students.json');    
  
-      request.onload = function() {                     // when the data comes back, browser calls this function
-         var data = JSON.parse(request.responseText);    // convert json to javascript array of objects
+	request.onload = function() {                
+        	var data = JSON.parse(request.responseText);   
 
-         major_name = data.filter(getMajor)       // meal_itmes array will contain the filtered data using the getMeal() function
-         function getMajor(item) {
-            return item.major == selected_Major;   // the new meal_items array will contain only items for the selected meal
-         }
+         	major_name = data.filter(getMajor)      
+         	function getMajor(item) {
+            		return item.major == selected_Major; 
+        	}
         
-        if (request.status == 200) {    // if all is well as data returns, then compile and populate the template
-            var templateText = document.getElementById('tableTemplate').innerHTML;
-            var compiledTemplateText = Handlebars.compile(templateText);       
-            compiledHtml = compiledTemplateText({ rows: major_name })          
-            document.getElementById('majorTable').innerHTML = compiledHtml; 
-        }
-        else {
-            document.querySelector('#majorTable').innerHTML = "There was an error, or menu items not found";
-        }
-     }
+        	if (request.status == 200) {   
+            		var templateText = document.getElementById('tableTemplate').innerHTML;
+            		var compiledTemplateText = Handlebars.compile(templateText);       
+            		compiledHtml = compiledTemplateText({ rows: major_name })          
+            		document.getElementById('majorTable').innerHTML = compiledHtml; 
+        	}
+        	else {
+            		document.querySelector('#majorTable').innerHTML = "There was an error";
+        	}
+	}
      
-     request.send(null);
-  }
+     	request.send(null);
+}
 </script>
 </html>
